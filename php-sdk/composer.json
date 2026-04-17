@@ -1,0 +1,6 @@
+{
+    "require": {
+        "fingerprint/server-sdk": "^7.0",
+        "guzzlehttp/guzzle": "^7.10"
+    }
+}

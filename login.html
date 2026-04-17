@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SecureBank — Login</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --blue-dark:  #003c7e;
+      --blue-mid:   #005baa;
+      --blue-light: #0071ce;
+      --accent:     #f7941d;
+      --bg:         #f4f6fb;
+      --card-bg:    #ffffff;
+      --text:       #1a1a2e;
+      --muted:      #6b7280;
+      --border:     #d1d9e6;
+      --danger:     #dc2626;
+      --success:    #16a34a;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── TOP NAV ── */
+    .topbar {
+      background: var(--blue-dark);
+      color: #fff;
+      font-size: 0.75rem;
+      padding: 6px 32px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 20px;
+    }
+    .topbar a { color: #c9d9ef; text-decoration: none; }
+    .topbar a:hover { color: #fff; }
+
+    header {
+      background: #fff;
+      border-bottom: 3px solid var(--accent);
+      padding: 0 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 68px;
+      box-shadow: 0 2px 8px rgba(0,0,0,.08);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+    .logo-icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, var(--blue-dark), var(--blue-light));
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-weight: 900;
+      font-size: 1.1rem;
+      letter-spacing: -1px;
+    }
+    .logo-text { display: flex; flex-direction: column; line-height: 1.1; }
+    .logo-name { font-size: 1.15rem; font-weight: 700; color: var(--blue-dark); }
+    .logo-tag  { font-size: 0.65rem; color: var(--accent); font-weight: 600; letter-spacing: .5px; text-transform: uppercase; }
+
+    .header-links { display: flex; gap: 24px; }
+    .header-links a { color: var(--blue-dark); text-decoration: none; font-size: 0.85rem; font-weight: 500; }
+    .header-links a:hover { color: var(--blue-light); }
+
+    /* ── HERO SPLIT ── */
+    .hero {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 420px;
+      gap: 0;
+      max-width: 1100px;
+      width: 100%;
+      margin: 48px auto;
+      padding: 0 24px;
+      align-items: start;
+    }
+
+    .hero-left { padding-right: 48px; padding-top: 32px; }
+    .hero-left h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--blue-dark);
+      line-height: 1.25;
+      margin-bottom: 12px;
+    }
+    .hero-left h1 span { color: var(--accent); }
+    .hero-left p { color: var(--muted); font-size: 0.95rem; line-height: 1.6; margin-bottom: 28px; }
+
+    .feature-list { list-style: none; display: flex; flex-direction: column; gap: 14px; }
+    .feature-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      font-size: 0.88rem;
+      color: var(--text);
+    }
+    .feature-list .icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #e8f0fb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 0.9rem;
+    }
+    .feature-list strong { display: block; font-weight: 600; margin-bottom: 2px; }
+    .feature-list span { color: var(--muted); font-size: 0.8rem; }
+
+    /* ── CARD ── */
+    .card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      box-shadow: 0 8px 40px rgba(0, 60, 126, .12);
+      padding: 36px 32px;
+      position: relative;
+    }
+    .card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 16px;
+      border: 1.5px solid var(--border);
+      pointer-events: none;
+    }
+
+    .card-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--blue-dark);
+      margin-bottom: 4px;
+    }
+    .card-sub { font-size: 0.82rem; color: var(--muted); margin-bottom: 28px; }
+
+    /* ── TAB TOGGLE ── */
+    .tabs {
+      display: flex;
+      border-radius: 8px;
+      background: #f0f4fa;
+      padding: 4px;
+      margin-bottom: 24px;
+      gap: 4px;
+    }
+    .tab-btn {
+      flex: 1;
+      border: none;
+      background: transparent;
+      padding: 8px 0;
+      border-radius: 6px;
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all .2s;
+    }
+    .tab-btn.active {
+      background: #fff;
+      color: var(--blue-dark);
+      font-weight: 600;
+      box-shadow: 0 1px 4px rgba(0,0,0,.12);
+    }
+
+    /* ── FORM ── */
+    .form-group { margin-bottom: 18px; }
+    label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    .input-wrap { position: relative; }
+    .input-wrap > svg {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+      pointer-events: none;
+    }
+
+    input[type="text"], input[type="password"] {
+      width: 100%;
+      padding: 11px 12px 11px 38px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.9rem;
+      color: var(--text);
+      background: #fafbfd;
+      outline: none;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    input:focus {
+      border-color: var(--blue-light);
+      box-shadow: 0 0 0 3px rgba(0,113,206,.12);
+      background: #fff;
+    }
+
+    .eye-toggle {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: var(--muted);
+      background: none;
+      border: none;
+      padding: 0;
+      display: flex;
+      align-items: center;
+    }
+    .eye-toggle:hover { color: var(--blue-dark); }
+
+    .form-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      font-size: 0.8rem;
+    }
+    .form-row label { margin-bottom: 0; display: flex; align-items: center; gap: 6px; font-weight: 400; cursor: pointer; }
+    .form-row a { color: var(--blue-light); text-decoration: none; font-weight: 500; }
+    .form-row a:hover { text-decoration: underline; }
+
+    .btn-login {
+      width: 100%;
+      padding: 13px;
+      background: linear-gradient(135deg, var(--blue-dark), var(--blue-light));
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity .2s, transform .15s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .btn-login:hover { opacity: .9; transform: translateY(-1px); }
+    .btn-login:active { transform: translateY(0); }
+    .btn-login:disabled { opacity: .65; cursor: not-allowed; transform: none; }
+
+    .btn-login .spinner {
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255,255,255,.4);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+      display: none;
+    }
+    .btn-login.loading .spinner { display: block; }
+    .btn-login.loading .btn-label { opacity: .7; }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 20px 0;
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .btn-secondary {
+      width: 100%;
+      padding: 11px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      background: #fff;
+      color: var(--blue-dark);
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: border-color .2s, background .2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .btn-secondary:hover { border-color: var(--blue-light); background: #f0f6ff; }
+
+    /* ── FP STATUS BOX ── */
+    .fp-status {
+      margin-top: 20px;
+      border-radius: 10px;
+      padding: 14px 16px;
+      font-size: 0.8rem;
+      display: none;
+      animation: fadeIn .3s ease;
+    }
+    .fp-status.show { display: block; }
+    .fp-status.loading {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      color: var(--blue-dark);
+    }
+    .fp-status.success {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      color: var(--success);
+    }
+    .fp-status.error {
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      color: var(--danger);
+    }
+    .fp-status-label { font-weight: 700; margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
+    .fp-status-value { font-family: 'SF Mono', 'Fira Code', monospace; word-break: break-all; color: inherit; opacity: .85; }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--blue-dark);
+      color: #8da8c8;
+      font-size: 0.75rem;
+      text-align: center;
+      padding: 16px 32px;
+    }
+    footer a { color: #8da8c8; margin: 0 8px; }
+    footer a:hover { color: #fff; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .hero { grid-template-columns: 1fr; }
+      .hero-left { display: none; }
+      .topbar, .header-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Top bar -->
+<div class="topbar">
+  <a href="#">Personal Banking</a>
+  <a href="#">Business</a>
+  <a href="#">Wealth</a>
+  <a href="#">Support</a>
+</div>
+
+<!-- Header -->
+<header>
+  <a class="logo" href="#">
+    <div class="logo-icon">SB</div>
+    <div class="logo-text">
+      <span class="logo-name">SecureBank</span>
+      <span class="logo-tag">Always with you</span>
+    </div>
+  </a>
+  <nav class="header-links">
+    <a href="#">Accounts</a>
+    <a href="#">Cards</a>
+    <a href="#">Loans</a>
+    <a href="#">Investments</a>
+    <a href="#">Help</a>
+  </nav>
+</header>
+
+<!-- Main -->
+<main class="hero">
+  <div class="hero-left">
+    <h1>Banking that puts<br><span>you first.</span></h1>
+    <p>Manage your money anytime, anywhere — securely. Get instant access to your accounts, cards, and investments with just one login.</p>
+
+    <ul class="feature-list">
+      <li>
+        <div class="icon">🔒</div>
+        <div>
+          <strong>Secure Authentication</strong>
+          <span>256-bit encryption with device fingerprinting for every session</span>
+        </div>
+      </li>
+      <li>
+        <div class="icon">⚡</div>
+        <div>
+          <strong>Instant Transfers</strong>
+          <span>NEFT, RTGS, IMPS and UPI all in one place, 24/7</span>
+        </div>
+      </li>
+      <li>
+        <div class="icon">📊</div>
+        <div>
+          <strong>Smart Insights</strong>
+          <span>AI-powered spend analysis and personalised financial advice</span>
+        </div>
+      </li>
+      <li>
+        <div class="icon">🛡️</div>
+        <div>
+          <strong>Fraud Protection</strong>
+          <span>Real-time monitoring flags suspicious logins instantly</span>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Login Card -->
+  <div class="card">
+    <div class="card-title">Welcome back</div>
+    <div class="card-sub">Sign in to your SecureBank account</div>
+
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab(this, 'user')">Customer ID</button>
+      <button class="tab-btn" onclick="switchTab(this, 'mobile')">Mobile Number</button>
+    </div>
+
+    <form id="loginForm" onsubmit="handleLogin(event)" novalidate>
+
+      <div class="form-group" id="userField">
+        <label for="userId">Customer ID / Username</label>
+        <div class="input-wrap">
+          <!-- user icon -->
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"/>
+          </svg>
+          <input type="text" id="userId" placeholder="Enter your Customer ID" autocomplete="username" />
+        </div>
+      </div>
+
+      <div class="form-group" id="mobileField" style="display:none;">
+        <label for="mobile">Mobile Number</label>
+        <div class="input-wrap">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 0 0 6 3.75v16.5a2.25 2.25 0 0 0 2.25 2.25h7.5A2.25 2.25 0 0 0 18 20.25V3.75a2.25 2.25 0 0 0-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 8.25h3"/>
+          </svg>
+          <input type="text" id="mobile" placeholder="+91 XXXXX XXXXX" autocomplete="tel" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <div class="input-wrap">
+          <!-- lock icon -->
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z"/>
+          </svg>
+          <input type="password" id="password" placeholder="Enter your password" autocomplete="current-password" style="padding-right:38px;" />
+          <button type="button" class="eye-toggle" onclick="togglePassword()" id="eyeBtn">
+            <!-- eye-open (shown when password is hidden) -->
+            <svg id="eyeOpen" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.964-7.178Z"/>
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
+            </svg>
+            <!-- eye-slash (shown when password is visible) -->
+            <svg id="eyeSlash" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="display:none;">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 0 0 1.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.451 10.451 0 0 1 12 4.5c4.756 0 8.773 3.162 10.065 7.498a10.522 10.522 0 0 1-4.293 5.774M6.228 6.228 3 3m3.228 3.228 3.65 3.65m7.894 7.894L21 21m-3.228-3.228-3.65-3.65m0 0a3 3 0 1 0-4.243-4.243m4.242 4.242L9.88 9.88"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label>
+          <input type="checkbox" id="remember" />
+          Remember this device
+        </label>
+        <a href="#">Forgot password?</a>
+      </div>
+
+      <button type="submit" class="btn-login" id="loginBtn">
+        <div class="spinner"></div>
+        <span class="btn-label">Sign In Securely</span>
+      </button>
+
+      <!-- Fingerprint status box -->
+      <div class="fp-status" id="fpStatus">
+        <div class="fp-status-label" id="fpStatusLabel"></div>
+        <div class="fp-status-value" id="fpStatusValue"></div>
+      </div>
+
+    </form>
+
+    <div class="divider">or</div>
+
+    <button class="btn-secondary" onclick="handleNetBanking()">
+      <!-- bank icon -->
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0 0 12 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75Z"/>
+      </svg>
+      Continue with Net Banking OTP
+    </button>
+  </div>
+</main>
+
+<!-- Footer -->
+<footer>
+  <div style="margin-bottom:6px;">
+    <a href="#">Privacy Policy</a>
+    <a href="#">Terms of Use</a>
+    <a href="#">Security</a>
+    <a href="#">Grievance Redressal</a>
+    <a href="#">Contact Us</a>
+  </div>
+  © 2026 SecureBank Limited. Registered & regulated by the Reserve Bank of India. DICGC insured.
+</footer>
+
+<!-- ── FINGERPRINT JS INTEGRATION ── -->
+<script>
+  // ── CONFIG — match these values to your .env (FP_JS_AGENT_KEY_V3, FP_PROXY_SCRIPT, FP_PROXY_ENDPOINT)
+  const FP_JS_AGENT_KEY_V3 = 'kj2Q0i7UIN0mKJUWb2iL';
+  const FP_PROXY_SCRIPT    = 'https://maneesh-fp-prototype.com/hMwQAFnIcb4hdmMQ/MznpbuWsK9lojY27';
+  const FP_PROXY_ENDPOINT  = 'https://maneesh-fp-prototype.com/hMwQAFnIcb4hdmMQ/grFpi9PCYEGUhvy9?region=ap';
+
+  // Initialize the Fingerprint agent on page load
+  const fpPromise = import(`${FP_PROXY_SCRIPT}?apiKey=${FP_JS_AGENT_KEY_V3}`)
+    .then(FingerprintJS => FingerprintJS.load({
+      endpoint: [
+        FP_PROXY_ENDPOINT,
+        FingerprintJS.defaultEndpoint
+      ],
+      region: "ap"
+    }));
+
+  // ── UI helpers ────────────────────────────────────────────────
+  function switchTab(btn, type) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('userField').style.display   = type === 'user'   ? '' : 'none';
+    document.getElementById('mobileField').style.display = type === 'mobile' ? '' : 'none';
+  }
+
+  function togglePassword() {
+    const input = document.getElementById('password');
+    const isHidden = input.type === 'password';
+    input.type = isHidden ? 'text' : 'password';
+    document.getElementById('eyeOpen').style.display  = isHidden ? 'none'  : '';
+    document.getElementById('eyeSlash').style.display = isHidden ? ''      : 'none';
+  }
+
+  function showFpStatus(state, label, value) {
+    const box = document.getElementById('fpStatus');
+    const lbl = document.getElementById('fpStatusLabel');
+    const val = document.getElementById('fpStatusValue');
+    box.className = `fp-status show ${state}`;
+    lbl.textContent = label;
+    val.textContent = value || '';
+  }
+
+  function setLoading(on) {
+    const btn = document.getElementById('loginBtn');
+    btn.disabled = on;
+    btn.classList.toggle('loading', on);
+  }
+
+  // ── Login handler ─────────────────────────────────────────────
+  async function handleLogin(e) {
+    e.preventDefault();
+
+    const activeTab  = document.querySelector('.tab-btn.active').textContent.trim();
+    const isCustomerId = activeTab === 'Customer ID';
+    const credential = isCustomerId
+      ? document.getElementById('userId').value.trim()
+      : document.getElementById('mobile').value.trim();
+    const password   = document.getElementById('password').value;
+
+    if (!credential || !password) {
+      showFpStatus('error', '⚠ Missing fields', 'Please enter your credentials before signing in.');
+      return;
+    }
+
+    setLoading(true);
+    showFpStatus('loading', '🔍 Verifying device…', 'Fingerprint identification in progress…');
+
+    try {
+      const fp  = await fpPromise;
+      const tag = isCustomerId
+        ? { login_Data: { cust_id: credential } }
+        : { login_Data: { mobile: credential } };
+      const result = await fp.get({ linkedId: credential, tag });
+
+      const visitorId    = result.visitorId;
+      const confidence   = (result.confidence?.score * 100 || 0).toFixed(1);
+      const requestId    = result.requestId;
+      const sealedResult = result.sealedResult;
+
+      console.group('🔒 Fingerprint result');
+      console.log('visitorId   :', visitorId);
+      console.log('requestId   :', requestId);
+      console.log('confidence  :', confidence + '%');
+      console.log('sealedResult:', sealedResult ?? '(not returned — ensure encryption key is active in Dashboard)');
+      console.log('full result :', result);
+      console.groupEnd();
+
+      showFpStatus('success', '✅ Device verified successfully', `Request ID: ${requestId}`);
+
+      const authResponse = await fetch('http://localhost:3000/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ credential, password, sealedResult, requestId })
+      });
+      const authData = await authResponse.json();
+      console.log('🔓 Decrypted result from backend:', authData);
+
+      if (authData.success) {
+        sessionStorage.setItem('sb_user', credential);
+        sessionStorage.setItem('sb_visitor_id', authData.visitorId || '');
+        window.location.href = 'dashboard.html';
+      }
+
+    } catch (err) {
+      console.error('Fingerprint error:', err);
+      showFpStatus('error', '⚠ Device verification failed', err.message || 'Unknown error. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function handleNetBanking() {
+    alert('Net Banking OTP flow — coming soon!');
+  }
+</script>
+
+</body>
+</html>
