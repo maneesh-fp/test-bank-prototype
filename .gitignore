@@ -1,5 +1,6 @@
 # Environment — never commit real keys
 .env
+config.js
 
 # Node
 node_modules/

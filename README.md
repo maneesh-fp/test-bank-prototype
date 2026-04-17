@@ -85,7 +85,7 @@ Fingerprint Pro v4 is a flatter, renamed API. This project uses both versions to
 | `login.html` | Login page — loads JS Agent v3 via custom proxy, sends sealed result to `/api/login` |
 | `dashboard.html` | Dashboard — loads JS Agent v4 from CDN, sends sealed result to `/api/identify` on Accounts tab click |
 
-> **Configuring keys in HTML files:** JS Agent public keys are set as `const` variables at the top of the `<script>` block in each file. These are client-visible public keys. Update them to match your `.env` values (`FP_JS_AGENT_KEY_V3`, `FP_JS_AGENT_KEY_V4`, `FP_PROXY_SCRIPT`, `FP_PROXY_ENDPOINT`).
+> **Configuring keys in HTML files:** JS Agent public keys are loaded from `config.js` (gitignored). Copy `config.example.js` to `config.js` and fill in your values. See [Setup](#setup) below.
 
 ### Backend
 
@@ -161,12 +161,13 @@ FP_PROXY_SCRIPT=          # Custom proxy script URL (v3) — leave blank to use 
 FP_PROXY_ENDPOINT=        # Custom proxy endpoint URL (v3) — leave blank to use CDN
 ```
 
-### 3. Update public keys in the HTML files
+### 3. Configure public JS Agent keys for the HTML pages
 
-The JS Agent public keys in `login.html` and `dashboard.html` are in a `// ── CONFIG` block at the top of the `<script>` tag. Update them to match your `.env`:
+```bash
+cp config.example.js config.js
+```
 
-- `login.html` → `FP_JS_AGENT_KEY_V3`, `FP_PROXY_SCRIPT`, `FP_PROXY_ENDPOINT`
-- `dashboard.html` → `FP_JS_AGENT_KEY_V4`
+Edit `config.js` and fill in your JS Agent public keys and proxy URLs. This file is gitignored and never committed.
 
 ### 4. (Optional) Install per-language dependencies
 

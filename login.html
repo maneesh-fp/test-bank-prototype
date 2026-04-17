@@ -525,11 +525,11 @@
 </footer>
 
 <!-- ── FINGERPRINT JS INTEGRATION ── -->
+<script src="config.js"></script>
 <script>
-  // ── CONFIG — match these values to your .env (FP_JS_AGENT_KEY_V3, FP_PROXY_SCRIPT, FP_PROXY_ENDPOINT)
-  const FP_JS_AGENT_KEY_V3 = 'kj2Q0i7UIN0mKJUWb2iL';
-  const FP_PROXY_SCRIPT    = 'https://maneesh-fp-prototype.com/hMwQAFnIcb4hdmMQ/MznpbuWsK9lojY27';
-  const FP_PROXY_ENDPOINT  = 'https://maneesh-fp-prototype.com/hMwQAFnIcb4hdmMQ/grFpi9PCYEGUhvy9?region=ap';
+  const FP_JS_AGENT_KEY_V3 = window.FP_CONFIG.jsAgentKeyV3;
+  const FP_PROXY_SCRIPT    = window.FP_CONFIG.proxyScript;
+  const FP_PROXY_ENDPOINT  = window.FP_CONFIG.proxyEndpoint;
 
   // Initialize the Fingerprint agent on page load
   const fpPromise = import(`${FP_PROXY_SCRIPT}?apiKey=${FP_JS_AGENT_KEY_V3}`)

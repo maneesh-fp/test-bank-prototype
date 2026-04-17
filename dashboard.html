@@ -601,9 +601,9 @@
 </script>
 
 <!-- ── FINGERPRINT JS INTEGRATION ── -->
+<script src="config.js"></script>
 <script>
-  // ── CONFIG — match this value to your .env (FP_JS_AGENT_KEY_V4)
-  const FP_JS_AGENT_KEY_V4 = 'eGtSwsuDuWA0D0Y4qNz1';
+  const FP_JS_AGENT_KEY_V4 = window.FP_CONFIG.jsAgentKeyV4;
 
   // New environment (v4) — used for Accounts tab only
   const fpAccountsPromise = import(`https://fpjscdn.net/v4/${FP_JS_AGENT_KEY_V4}`)
