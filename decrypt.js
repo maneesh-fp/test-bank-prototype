@@ -193,9 +193,6 @@ app.post('/api/login', async (req, res) => {
     return res.json({ success: true });
   }
 
-  console.log('sealedResult type:', typeof sealedResult);
-  console.log('sealedResult full:', sealedResult);
-
   const buf = Buffer.from(sealedResult, 'base64');
 
   // Try v4 decryption first, fall back to v3

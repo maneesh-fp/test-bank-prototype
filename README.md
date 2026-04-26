@@ -151,7 +151,6 @@ Edit `.env` and fill in your values:
 
 ```
 FP_SERVER_API_KEY=        # Fingerprint Server API key (works for both v3 and v4)
-FP_WEBHOOK_SECRET=        # Webhook secret from your v3 Fingerprint environment
 FP_WEBHOOK_SECRET_V4=     # Webhook secret from your v4 Fingerprint environment
 FP_SEALED_KEY=            # Sealed results decryption key — v3 environment (base64)
 FP_SEALED_KEY_ACCOUNTS=   # Sealed results decryption key — v4 environment (base64)
