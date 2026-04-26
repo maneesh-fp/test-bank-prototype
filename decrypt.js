@@ -98,18 +98,24 @@ async function fetchAndLogEventV4(eventId) {
     const city           = ipInfo?.v4?.geolocation?.city_name ?? ipInfo?.v6?.geolocation?.city_name ?? 'unknown';
 
     console.log('\nServer API response (v4):');
-    console.log('  event_id      :', data?.event_id);
-    console.log('  visitor_id    :', identification?.visitor_id);
-    console.log('  linked_id     :', data?.linked_id);
-    console.log('  confidence    :', identification?.confidence?.score);
-    console.log('  suspect_score :', data?.suspect_score);
-    console.log('  browser       :', browser?.browser_name);
-    console.log('  os            :', browser?.os);
-    console.log('  ip            :', data?.ip_address);
-    console.log('  city          :', city);
-    console.log('  bot           :', data?.bot);
-    console.log('  vpn           :', data?.vpn);
-    console.log('  proxy         :', data?.proxy);
+    console.log('  event_id        :', data?.event_id);
+    console.log('  visitor_id      :', identification?.visitor_id);
+    console.log('  linked_id       :', data?.linked_id);
+    console.log('  confidence      :', identification?.confidence?.score);
+    console.log('  suspect_score   :', data?.suspect_score);
+    console.log('  browser         :', browser?.browser_name);
+    console.log('  os              :', browser?.os);
+    console.log('  ip              :', data?.ip_address);
+    console.log('  city            :', city);
+    console.log('  bot             :', data?.bot);
+    console.log('  vpn             :', data?.vpn, '| confidence:', data?.vpn_confidence);
+    console.log('  proxy           :', data?.proxy, '| confidence:', data?.proxy_confidence, '| type:', data?.proxy_details?.proxy_type);
+    console.log('  incognito       :', data?.incognito);
+    console.log('  tampering       :', data?.tampering, '| confidence:', data?.tampering_confidence);
+    console.log('  virtual_machine :', data?.virtual_machine);
+    console.log('  developer_tools :', data?.developer_tools);
+    console.log('  high_activity   :', data?.high_activity_device);
+    console.log('  ip_blocklist    :', JSON.stringify(data?.ip_blocklist));
 
     const entry = [
       `\n${'─'.repeat(60)}`,
@@ -377,19 +383,25 @@ app.post('/api/webhook/v4', (req, res) => {
   const city    = ipInfo?.v4?.geolocation?.city_name ?? ipInfo?.v6?.geolocation?.city_name ?? 'unknown';
 
   console.log('\nWebhook response (v4):');
-  console.log('  event_id      :', body?.event_id);
-  console.log('  visitor_id    :', body?.identification?.visitor_id);
-  console.log('  linked_id     :', body?.linked_id);
-  console.log('  tags          :', JSON.stringify(body?.tags ?? {}));
-  console.log('  confidence    :', body?.identification?.confidence?.score);
-  console.log('  suspect_score :', body?.suspect_score);
-  console.log('  browserName   :', browser?.browser_name);
-  console.log('  os            :', browser?.os);
-  console.log('  ip            :', body?.ip_address);
-  console.log('  city          :', city);
-  console.log('  bot           :', body?.bot);
-  console.log('  vpn           :', body?.vpn);
-  console.log('  proxy         :', body?.proxy);
+  console.log('  event_id        :', body?.event_id);
+  console.log('  visitor_id      :', body?.identification?.visitor_id);
+  console.log('  linked_id       :', body?.linked_id);
+  console.log('  tags            :', JSON.stringify(body?.tags ?? {}));
+  console.log('  confidence      :', body?.identification?.confidence?.score);
+  console.log('  suspect_score   :', body?.suspect_score);
+  console.log('  browser         :', browser?.browser_name);
+  console.log('  os              :', browser?.os);
+  console.log('  ip              :', body?.ip_address);
+  console.log('  city            :', city);
+  console.log('  bot             :', body?.bot);
+  console.log('  vpn             :', body?.vpn, '| confidence:', body?.vpn_confidence);
+  console.log('  proxy           :', body?.proxy, '| confidence:', body?.proxy_confidence, '| type:', body?.proxy_details?.proxy_type);
+  console.log('  incognito       :', body?.incognito);
+  console.log('  tampering       :', body?.tampering, '| confidence:', body?.tampering_confidence);
+  console.log('  virtual_machine :', body?.virtual_machine);
+  console.log('  developer_tools :', body?.developer_tools);
+  console.log('  high_activity   :', body?.high_activity_device);
+  console.log('  ip_blocklist    :', JSON.stringify(body?.ip_blocklist));
 
   const entry = [
     `\n${'─'.repeat(60)}`,
