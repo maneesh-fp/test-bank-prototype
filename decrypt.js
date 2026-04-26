@@ -18,11 +18,10 @@ const path     = require('path');
 const { unsealEventsResponse, DecryptionAlgorithm, isValidWebhookSignature } = require('@fingerprintjs/fingerprintjs-pro-server-api');
 const { unsealEventsResponse: unsealEventsResponseV4, DecryptionAlgorithm: DecryptionAlgorithmV4 } = require('@fingerprint/node-sdk');
 
-const FP_SERVER_API_KEY     = process.env.FP_SERVER_API_KEY;
-const FP_WEBHOOK_SECRET     = process.env.FP_WEBHOOK_SECRET;
-const FP_WEBHOOK_SECRET_V4  = process.env.FP_WEBHOOK_SECRET_V4;
+const FP_SERVER_API_KEY    = process.env.FP_SERVER_API_KEY;
+const FP_WEBHOOK_SECRET_V4 = process.env.FP_WEBHOOK_SECRET_V4;
 
-if (!FP_SERVER_API_KEY || !FP_WEBHOOK_SECRET || !FP_WEBHOOK_SECRET_V4) {
+if (!FP_SERVER_API_KEY || !FP_WEBHOOK_SECRET_V4) {
   console.error('Missing required env vars. Copy .env.example to .env and fill in values.');
   process.exit(1);
 }
@@ -338,70 +337,7 @@ app.post('/api/identify', async (req, res) => {
   return res.json({ success: true, visitorId: identification?.visitor_id });
 });
 
-// Health-check — some webhook dashboards GET the URL before sending events
-app.get('/api/webhook', (_req, res) => res.sendStatus(200));
-
-/**
- * POST /api/webhook
- * Receives identification events pushed by Fingerprint in real-time.
- * Register this URL in the Fingerprint Dashboard → Webhooks.
- * Fingerprint sends a JSON body; we log it to webhooks.txt and print key fields.
- */
-app.post('/api/webhook', (req, res) => {
-  // ── Signature validation ──────────────────────────────────────
-  const signature = req.headers['fpjs-event-signature'];
-
-  if (signature) {
-    const valid = isValidWebhookSignature({
-      header: signature,
-      data:   req.rawBody,
-      secret: FP_WEBHOOK_SECRET,
-    });
-    if (!valid) {
-      return res.status(403).json({ error: 'Invalid signature' });
-    }
-  }
-
-  const body = req.body;
-
-  // Fingerprint Dashboard sends {"name":"TEST"} to verify the endpoint is reachable
-  if (body?.name === 'TEST') {
-    console.log('[Webhook v3] test ping received');
-    return res.sendStatus(200);
-  }
-
-
-  // Webhook payload is flat — fields are top-level, not nested under products
-  const city = body?.ipInfo?.v4?.geolocation?.city?.name ?? body?.ipInfo?.v6?.geolocation?.city?.name ?? 'unknown';
-
-  console.log('\nWebhook response (v3):');
-  console.log('  requestId    :', body?.requestId);
-  console.log('  visitorId    :', body?.visitorId);
-  console.log('  linkedId     :', body?.linkedId);
-  console.log('  tag          :', JSON.stringify(body?.tag ?? {}));
-  console.log('  confidence   :', body?.confidence?.score);
-  console.log('  suspectScore :', body?.suspectScore?.result);
-  console.log('  browserName  :', body?.browserDetails?.browserName);
-  console.log('  osName       :', body?.browserDetails?.os);
-  console.log('  ip           :', body?.ip);
-  console.log('  city         :', city);
-
-  const entry = [
-    `\n${'─'.repeat(60)}`,
-    `Timestamp : ${new Date().toISOString()}`,
-    `RequestId : ${body?.requestId}`,
-    `VisitorId : ${body?.visitorId}`,
-    `LinkedId  : ${body?.linkedId ?? '(none)'}`,
-    JSON.stringify(body, null, 2),
-  ].join('\n');
-
-  fs.appendFileSync(WEBHOOK_LOG, entry + '\n');
-
-  // Fingerprint expects a 200 response quickly — must not timeout
-  res.sendStatus(200);
-});
-
-// Health-check for v4 webhook
+// Health-check — Fingerprint Dashboard GETs the URL before activating the webhook
 app.get('/api/webhook/v4', (_req, res) => res.sendStatus(200));
 
 /**

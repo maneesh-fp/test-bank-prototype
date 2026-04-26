@@ -247,11 +247,10 @@ All scripts read `FP_SERVER_API_KEY` from `.env` automatically.
 
 ## Webhook Verification
 
-`decrypt.js` exposes two webhook endpoints. Point your Fingerprint webhook settings to:
+`decrypt.js` exposes a single v4 webhook endpoint. Point your Fingerprint webhook settings to:
 
-| Endpoint | Version | Secret env var | Log file |
-|---|---|---|---|
-| `POST /api/webhook` | v3 | `FP_WEBHOOK_SECRET` | `webhooks.txt` |
-| `POST /api/webhook-v4` | v4 | `FP_WEBHOOK_SECRET_V4` | `webhooks.txt` |
+| Endpoint | Secret env var | Log file |
+|---|---|---|
+| `POST /api/webhook/v4` | `FP_WEBHOOK_SECRET_V4` | `webhooks.txt` |
 
 Each incoming webhook is HMAC-SHA256 verified against the signature in the `fpjs-event-signature` header before being logged.
